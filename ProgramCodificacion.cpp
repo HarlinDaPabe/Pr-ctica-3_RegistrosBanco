@@ -9,19 +9,12 @@ int main(int argc, char *argv[])
     cout << "Este Programa sirve para Realizar la Codificacion de un Texto Entregado por el Usuario y guardarlo en un Archivo de Texto." << endl;
     cout << "Por favor, Ingrese Paso a Paso los Siguientes Datos:\n1. El Texto a Codificar.\n2. Semilla con la cual se separaran los grupos de Bits (Entero > 0 y Entero < 9).\n3. Nombre del Archivo en que se guardará el Texto Codificado.\n4. El metodo de Codificacion (1 (Codificar según Cantidad 1s y 0s), 2 (Codificar Rotando Bits)).\nNOTA: De no entregarse los datos en este orden, no recibirás el resultado esperado." << endl << endl;
 
-    short int size_let, semilla; bool Correr = true; int filas; long int limite;
+    short int semilla; bool Correr = true; int filas; long int limite;
     char** Texto; unsigned char* TextoEscrib;
 
     if (argc == 5){
         for (int casos = 1; casos <= 4; casos++){
             switch (casos) {
-            case 1:
-                size_let = strlen(argv[casos]);
-                if (size_let == 0){
-                    cout << "No haz Ingresado una Cantidad de Texto Valida para Codificar.\n";
-                    Correr = false;
-                }
-                break;
             case 2:
                 if (strlen(argv[casos]) > 1 || strlen(argv[casos]) == 0 || argv[casos][0] < '1' || argv[casos][0] > '8'){
                     cout << "La Semilla que has ingresado no es Valida." << endl;
@@ -42,7 +35,7 @@ int main(int argc, char *argv[])
         if (!Correr){
             return 1;
         } else{
-            Texto = Arreglo_(argv[1], semilla, size_let, filas);
+            Texto = Arreglo_(argv[1], semilla, filas);
             cout << filas << " ";
             limite = (filas*semilla) - ((filas*semilla)%8 + 1);
             if (argv[4][0] == '1'){
