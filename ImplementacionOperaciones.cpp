@@ -5,7 +5,7 @@
 
 using namespace std;
 
-char** Arreglo_(char* phrase, short int semilla, int& filas){
+char** Arreglo_(char* phrase, short int semilla, int& filas, long int& limite){
     /*Funcion Implementada para a partir del texto que entra al sistema generar con este un Arreglo con los bits de cada caracter ingresado.
     Entradas ---> Frase en un Arreglo de Char, Semilla con la que se separaran los bits, Catidad de Letras que posee el Arreglo que entra.
     Salida ---> Arreglo Dinámico de Bits.
@@ -16,17 +16,20 @@ char** Arreglo_(char* phrase, short int semilla, int& filas){
         return NULL;
     }
 
-    char* Textfile; long int tam;
+    long int tam;
     tam = archivo.tellg();
+    limite = tam*8;
+    char* Textfile = new char[tam];
+
     archivo.seekg(0);
     archivo.read(Textfile, tam);
-
     filas = (tam*8)/semilla;
     int i = 0, limit = 0;
     unsigned char mascara = 128; unsigned char valor;
     if ((tam*8)%semilla != 0){
         filas++;
     }
+
     char** Arreglo_bits = new char*[filas];
     for (int fila = 0; fila < filas; fila++){
         Arreglo_bits[fila] = new char[semilla];
@@ -121,7 +124,7 @@ void Codificacion_2(char** Arreglo_bits, short int semilla, int filas, long int 
     }
 }
 
-char** Lectura(char* url, int& letras, short int semilla){
+char** Lectura(char* url, int& letras, short int semilla, long int& limite){
     /*Se encarga de realizar la lectura del Archivo de texto.
     Entradas ---> Arreglo de Unsigned char con el nombre del Archivo.
     Salida ---> Arreglo Unsigned Char con el Contenido del Archivo.
@@ -134,6 +137,7 @@ char** Lectura(char* url, int& letras, short int semilla){
     }
 
     totalbytes = archivo.tellg();
+    limite = totalbytes;
     letras = totalbytes/semilla;
     if (totalbytes%semilla != 0){
         letras++;
@@ -239,7 +243,7 @@ unsigned char* ArregloEsc_(char** TextCodif, short int semilla, int& filas, unsi
     short int limit = 7; int Tamagno;
     unsigned char* ptr; unsigned char valor, result = 0;
     if (Tarea == '0'){
-        Tamagno = (filas*semilla)/8;
+        Tamagno = limitador/8;
         ptr = new unsigned char[Tamagno];
     } else {
         Tamagno = limitador;
@@ -301,11 +305,12 @@ void Esc_Banco(short int semilla, bool Modalidad){
         } else{
             char archivo[] = {"sudo.txt"};
             char archivoend[] = {"sudoD.txt"};
-            TextDecodif = Arreglo_(archivoend, semilla, filas);
-            limitador = (filas*semilla)-((filas*semilla)%8+1);
-            TextCodif = Codificacion_1(TextDecodif, semilla, filas, limitador);
-            Textoend = ArregloEsc_(TextCodif, semilla, filas, 1, limitador);
-            Escritura(archivo, Textoend, limitador);
+            cout << 1;
+            //TextDecodif = Arreglo_(archivoend, semilla, filas);
+            //limitador = (filas*semilla)-((filas*semilla)%8+1);
+            //TextCodif = Codificacion_1(TextDecodif, semilla, filas, limitador);
+            //Textoend = ArregloEsc_(TextCodif, semilla, filas, 1, limitador);
+            //Escritura(archivo, Textoend, limitador);
         }
     }
     delete[]Textoend;

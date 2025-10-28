@@ -35,8 +35,7 @@ int main(int argc, char *argv[])
         if (!Correr){
             return 1;
         } else{
-            TextoArchiv_ = Lectura(argv[1], filas, semilla);
-            limite = (filas*semilla) - ((filas*semilla)%8 + 1);
+            TextoArchiv_ = Lectura(argv[1], filas, semilla, limite);
             if (argv[4][0] == '1'){
                 Decodificacion_1(TextoArchiv_, semilla, filas, limite);
             } else{

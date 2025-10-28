@@ -35,23 +35,18 @@ int main(int argc, char *argv[])
         if (!Correr){
             return 1;
         } else{
-            Texto = Arreglo_(argv[1], semilla, filas);
-            cout << filas << " ";
-            limite = (filas*semilla) - ((filas*semilla)%8 + 1);
+            Texto = Arreglo_(argv[1], semilla, filas, limite);
             if (argv[4][0] == '1'){
                 Texto = Codificacion_1(Texto, semilla, filas, limite);
             } else{
                 Codificacion_2(Texto, semilla, filas, limite);
             }
-            cout << filas << " ";
             TextoEscrib = ArregloEsc_(Texto, semilla, filas, OPT, limite);
-            cout << filas;
             Escritura(argv[3], TextoEscrib, filas);
         }
     } else{
         cout << "No entregaste suficientes Argumentos.\n";
         return 1;
     }
-
     return 0;
 }

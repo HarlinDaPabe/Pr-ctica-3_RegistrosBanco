@@ -1,10 +1,10 @@
 #ifndef OPERACIONESPROGRAMA_H
 #define OPERACIONESPROGRAMA_H
 
-char** Arreglo_(char* phrase, short int semilla, int& filas);
+char** Arreglo_(char* phrase, short int semilla, int& filas, long int& limite);
 char** Codificacion_1(char** Arreglo_bits, short int semilla, int filas, long int limitador);
 void Codificacion_2(char** Arreglo_bits, short int semilla, int filas, long int limit);
-char** Lectura(char* url, int& letras, short int semilla);
+char** Lectura(char* url, int& letras, short int semilla, long int& limite);
 void Escritura(char* endfile, unsigned char* TexCodif, int filas);
 void Decodificacion_1(char** TextCodif, short int semilla, int filas, long int limitador);
 void Decodificacion_2(char** TextCodif, short int semilla, int filas, long int limitador);
