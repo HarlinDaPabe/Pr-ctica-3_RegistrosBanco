@@ -7,7 +7,7 @@ using namespace std;
 int main(int argc, char *argv[])
 {
     cout << "Este Programa sirve para Realizar la Decodificacion de un Archivo de Texto Codificado Entregado por el Usuario y guardarlo en un Archivo de Texto." << endl;
-    cout << "Por favor, Ingrese Paso a Paso los Siguientes Datos:\n1. El Nombre del Archivo de Texto a Decodificar.\n2. Semilla con la cual se separaron los grupos de Bits (Entero > 0 y Entero < 9).\n3. Nombre del Archivo en que se guardará el Texto Decodificado.\n4. El metodo de Decodificacion (1 (Decodificar según Cantidad 1s y 0s), 2 (Decodificar Rotando Bits)).\nNOTA: De no entregarse los datos en este orden, no recibirás el resultado esperado." << endl << endl;
+    cout << "Por favor, Ingrese Paso a Paso los Siguientes Datos:\n1. El Nombre del Archivo de Texto a Decodificar.\n2. Semilla con la cual se separaron los grupos de Bits (Entero > 0 y Entero < 9).\n3. Nombre del Archivo en que se guardara el Texto Decodificado.\n4. El metodo de Decodificacion (1 (Decodificar segun Cantidad 1s y 0s), 2 (Decodificar Rotando Bits)).\nNOTA: De no entregarse los datos en este orden, no recibiras el resultado esperado." << endl << endl;
 
     short int semilla; bool Correr = true; int filas; long int limite;
     char** TextoArchiv_; unsigned char* Textend;

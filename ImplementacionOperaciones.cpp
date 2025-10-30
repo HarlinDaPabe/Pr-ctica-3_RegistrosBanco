@@ -16,17 +16,16 @@ char** Arreglo_(char* phrase, short int semilla, int& filas, long int& limite){
         return NULL;
     }
 
-    long int tam;
-    tam = archivo.tellg();
+    const long int tam = archivo.tellg();;
     limite = tam*8;
-    char* Textfile = new char[tam];
+    char Textfile[tam];
 
     archivo.seekg(0);
     archivo.read(Textfile, tam);
-    filas = (tam*8)/semilla;
+    filas = limite/semilla;
     int i = 0, limit = 0;
     unsigned char mascara = 128; unsigned char valor;
-    if ((tam*8)%semilla != 0){
+    if (limite%semilla != 0){
         filas++;
     }
 
@@ -113,11 +112,11 @@ void Codificacion_2(char** Arreglo_bits, short int semilla, int filas, long int 
     unsigned char ultimo;
     for (int i = 0; i < filas; i++){
         ultimo = (Arreglo_bits[i][0]+48);
-        for (int j = 1; j < semilla && (i*semilla)+j <= limit; j++){
+        for (int j = 1; j < semilla && (i*semilla)+j < limit; j++){
             Arreglo_bits[i][j-1] = (Arreglo_bits[i][j]+48);
         }
         if (i == filas-1){
-            Arreglo_bits[i][limit-(i*semilla)] = ultimo;
+            Arreglo_bits[i][(limit-1)-(i*semilla)] = ultimo;
         } else{
             Arreglo_bits[i][semilla-1] = ultimo;
         }
@@ -176,6 +175,7 @@ void Escritura(char* endfile, unsigned char* TexCodif, int filas){
         }
     }
     archivo.close();
+    delete[]TexCodif;
 }
 
 void Decodificacion_1(char** TextCodif, short int semilla, int filas, long int limitador){
