@@ -1,7 +1,9 @@
 #include <iostream>
 #include <cstring>
+#include <string>
 #include <fstream>
 #include <cstdlib>
+#include <sstream>
 
 using namespace std;
 
@@ -278,98 +280,82 @@ unsigned char* ArregloEsc_(char** TextCodif, short int semilla, int& filas, unsi
     return ptr;
 }
 
-void Esc_Banco(short int semilla, bool Modalidad){
-    /*Genera los Archivos de Salida de la Ejecución del Programa Bancario.
-    Entradas ---> Arreglo  Dinámico Lineal para el Texto Decodificado, Arreglo Dinámico Bidimensional para el Texto Codificado, Semilla con que se separaron los Grupos de Bits, Modalidad (Codificar o Decodificar).
-    Salidas ---> Archivos del Sitema Bancario.
+void Dec_Banco(){
+    /*Genera un Archivo con la Informacion del sudo.txt Decodificada.
+    Entradas ---> Semilla con la que se Codifico el sudo.txt
+    Salidas ---> Void.
     */
-    int filas; long int limitador;;
-    unsigned char* Textoend; char** TextCodif; char** TextDecodif;
-    if (!Modalidad){
-        char archivo[] = {"sudo.txt"};
-        char archivoend[] = {"sudoD.txt"};
-        TextDecodif = Lectura(archivo, filas, semilla);
-        limitador = (filas*semilla)-((filas*semilla)%8+1);
-        Decodificacion_1(TextDecodif, semilla, filas, limitador);
-        Textoend = ArregloEsc_(TextDecodif, semilla, filas, 0, limitador);
-        Escritura(archivoend, Textoend, limitador);
-    } else{
-        if (semilla != 6){
-            char archivo[] = {"Transacciones.txt"};
-            char archivoend[] = {"TransaccionesD.txt"};
-            TextDecodif = Arreglo_(archivoend, semilla, filas);
-            limitador = (filas*semilla)-((filas*semilla)%8+1);
-            Codificacion_2(TextDecodif, semilla, filas, limitador);
-            Textoend = ArregloEsc_(TextDecodif, semilla, filas, 1, limitador);
-            Escritura(archivo, Textoend, limitador);
-        } else{
-            char archivo[] = {"sudo.txt"};
-            char archivoend[] = {"sudoD.txt"};
-            cout << 1;
-            //TextDecodif = Arreglo_(archivoend, semilla, filas);
-            //limitador = (filas*semilla)-((filas*semilla)%8+1);
-            //TextCodif = Codificacion_1(TextDecodif, semilla, filas, limitador);
-            //Textoend = ArregloEsc_(TextCodif, semilla, filas, 1, limitador);
-            //Escritura(archivo, Textoend, limitador);
-        }
-    }
-    delete[]Textoend;
+    char** Lectur; unsigned char* Lectura_Lineal; int filas; long int limite; char filebeg[] = {'s','u','d','o',',','t','x','t'}, filend[] = {'s','u','d','o','D',',','t','x','t'};
+    Lectur = Lectura(filebeg, filas, 3, limite);
+    Decodificacion_1(Lectur, 3, filas, limite);
+    Lectura_Lineal = ArregloEsc_(Lectur, 3, filas, '0', limite);
+    Escritura(filend, Lectura_Lineal, filas);
 }
 
-bool IngresoSistem(char** Valor, char* Cedula, char* Clave, char OPT, long int& tam){
+bool IngresoSistem(char** Valor, char* Cedula, char* Clave, char OPT){
     /*Verifica si los datos que nos Entrega el Usuario existen en el Sistema.
     Entradas ---> Arreglo  Dinámico Lineal, Cedula del Usuario, Clave del Usuario, Variable Bandera.
-    Salidas ---> Areglo Lineal Dinámico con la Información del Sistema.
+    Salidas ---> True or False.
     */
-    bool True= false;
-    Esc_Banco(6, 0);
-
-    Valor = new char*[3];
-    for (int i = 0; i < 3; i++){
-        Valor[i] = new char[13];
-    }
-
-    ifstream file("sudoD.txt", ios::binary);
-
-    if (OPT == 'B'){
-        char letra; int c; int i = 0, cont = 0;
-        file.seekg(1);
-        while ((c = file.get()) != EOF){
-            letra = static_cast<char>(c);
-            if (letra == Cedula[i]){
-                Valor[0][i] = letra;
+    Dec_Banco();
+    ifstream file ("sudoD.txt", ios::binary);short int tam, cont = 0;
+    char* clave = new char[25];
+    if (OPT == 'A'){
+        tam = 7;
+        file.seekg(6);
+        file.getline(clave, 25, '\n');
+        for (int i = 0; i < tam; i++){
+            if (clave[i] == Clave[i]){
                 cont++;
-                i++;
-            } else {
-                cont = 0;
-                i = 0;
-            }
-            tam++;
-            if (cont == strlen(Cedula)){
-                True = true;
-                break;
+                if (cont == tam){
+                    return true;
+                }
             }
         }
-        file.seekg(tam+1);
+        return false;
     } else{
-        file.seekg(1);
-    }
-    file.read(Valor[1], strlen(Clave));
-    if (strcmp(Valor[1], Clave) != 0){
-        True = false;
-    }
-
-    if (True){
-        file.getline(Valor[2], 13, '\n');
-        return true;
-    } else{
-        for (int i = 0; i < 3; i++){
-            delete[]Valor[i];
+        char** ptr = new char*[3];
+        cont = 0;
+        bool Encontrado = false;
+        tam = 10;
+        while (cont < 2){
+            file.getline(clave, 25, '\n');
+            cont++;
         }
-        delete[]Valor;
-        Valor = NULL;
+        while (file.getline(clave, 100, '\n') && !Encontrado){
+            Encontrado = true;
+            stringstream seg (clave);
+            seg.getline(clave, 25, '-');
+            for (int i = 0; i < tam; i++){
+                if (clave[i] != Cedula[i]){
+                    Encontrado = false;
+                    break;
+                }
+            }
+            ptr[0] = clave;
+            tam = 6;
+            seg.getline(clave, 25, '-');
+            for (int i = 0; i < tam; i++){
+                if (clave[i] != Clave[i]){
+                    Encontrado = false;
+                    break;
+                }
+            }
+            ptr[1] = clave;
+            seg.getline(clave, 25, '\n');
+            ptr[2] = clave;
+        }
+        if (Encontrado){
+            Valor = ptr;
+            return true;
+        } else{
+            for (int i = 0; i < 3; i++){
+                delete[]ptr[i];
+            }
+            delete[]ptr;
+            return false;
+        }
     }
-    return false;
 }
 
 bool VerifReg(char* Clave, char* Cedula, char* Saldo){
@@ -473,7 +459,7 @@ void Escribirnewdates(char* Clave, char* Cedula, char* Saldo, char Acceso, long 
 }
 
 void Traspass(char* Auxiliar, char* Arreglo){
-    /*Traspasa los Datos de Entrada a los Arreglos Estaticos del Sistema.
+    /*Traspasa los Datos de Entrada a los Arreglos del Sistema.
     Entradas ---> Dato a Ingresar al Sistema, Arreglo del Sistema.
     Salidas ---> Void.
     */
@@ -484,7 +470,7 @@ void Traspass(char* Auxiliar, char* Arreglo){
         } else{
             Listo = true;
         }
-        for (size_t i = 0; i < strlen(Auxiliar); i++){
+        for (size_t i = 0; i < strlen(Auxiliar) && Listo == true; i++){
             if(Auxiliar[i] < '0' || Auxiliar[i] > '9'){
                 Listo = false;
             }
@@ -495,10 +481,10 @@ void Traspass(char* Auxiliar, char* Arreglo){
         }
     }
 
-    for (size_t j = 0; j < strlen(Auxiliar); j++){
+    for (size_t j = 0; j < strlen(Arreglo); j++){
         Arreglo[j] = Auxiliar[j];
     }
-    Arreglo[13] = '\0';
+    Arreglo[strlen(Arreglo)] = '\0';
 }
 
 void LimpiarTerminal() {

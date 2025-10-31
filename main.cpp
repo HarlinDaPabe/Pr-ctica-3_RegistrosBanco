@@ -5,7 +5,7 @@ using namespace std;
 
 int main()
 {
-    char Acceso, Accion; short int cont = 0; char* Cedula = new char[13]; char* Clave = new char[13]; char* Saldo = new char[13]; char* Auxiliar = new char[15];
+    char Acceso, Accion; short int cont = 0; char Cedula[11]; char Clave[6]; char Saldo[25]; char Auxiliar[30];
     char** sudo = NULL; long int posB; char bandera = '1';
     while(bandera != '0'){
         cout << "Bienvenid@ a Nuestra Aplicacion de Acceso Bancario, CoinApp!!\nA continuación, Elige una de las Siguientes Opciones para Acceder al Sistema.\n(A) - Para Ingresar como Usuario Administrador.\n(B) - Para Acceder como Cliente.\n(y) - Cerrar Programa.\nOpcion a Elegir: ";
@@ -19,22 +19,17 @@ int main()
         if (Acceso == 'A'){
             cout << "Ingresa la Clave Asignada para los Usuarios Administradores: ";
             cin.ignore();
-            cin.getline(Auxiliar,12);
+            cin.getline(Auxiliar,30);
             Traspass(Auxiliar, Clave);
         } else if (Acceso == 'y'){
             bandera = '0';
-            delete[]Cedula;
-            delete[]Clave;
-            delete[]Saldo;
-            delete[]Auxiliar;
-            return 1;
         } else{
             cout << "Ingresa tu Numero de Documento: ";
             cin.ignore();
-            cin.getline(Auxiliar,12);
+            cin.getline(Auxiliar,30);
             Traspass(Auxiliar, Cedula);
             cout << "Ingresa tu Clave: ";
-            cin.getline(Auxiliar,12);
+            cin.getline(Auxiliar,30);
             Traspass(Auxiliar, Clave);
         }
         LimpiarTerminal();
@@ -77,13 +72,13 @@ int main()
                 do{
                     cout << "Cedula: ";
                     cin.ignore();
-                    cin.getline(Auxiliar,12);
+                    cin.getline(Auxiliar,30);
                     Traspass(Auxiliar, Cedula);
                     cout << "Clave: ";
-                    cin.getline(Auxiliar,12);
+                    cin.getline(Auxiliar,30);
                     Traspass(Auxiliar, Clave);
                     cout << "Saldo: ";
-                    cin.getline(Auxiliar,12);
+                    cin.getline(Auxiliar,30);
                     Traspass(Auxiliar, Saldo);
                     Ingreso = VerifReg(Clave, Cedula, Saldo);
                     if (!Ingreso){
