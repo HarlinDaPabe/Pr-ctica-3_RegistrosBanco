@@ -5,50 +5,67 @@ using namespace std;
 
 int main()
 {
-    char Acceso, Accion; short int cont = 0; char Cedula[11]; char Clave[6]; char Saldo[25]; char Auxiliar[30];
-    char** sudo = NULL; long int posB; char bandera = '1';
-    while(bandera != '0'){
-        cout << "Bienvenid@ a Nuestra Aplicacion de Acceso Bancario, CoinApp!!\nA continuación, Elige una de las Siguientes Opciones para Acceder al Sistema.\n(A) - Para Ingresar como Usuario Administrador.\n(B) - Para Acceder como Cliente.\n(y) - Cerrar Programa.\nOpcion a Elegir: ";
+    char Acceso, Accion; char Cedula[11]; char Clave[7]; char Saldo[25]; char Auxiliar[30];
+    bool Ingreso; int posB, lineas; bool bandera = false;
+    while(!bandera){
+        short int cont = 0;
+        cout << "Bienvenid@ a Nuestra Aplicacion de Acceso Bancario, CoinApp!!\nA continuacion, Elige una de las Siguientes Opciones para Acceder al Sistema.\n(A) - Para Ingresar como Usuario Administrador.\n(B) - Para Acceder como Cliente.\n(y) - Cerrar Programa.\nOpcion a Elegir: ";
         cin >> Acceso;
 
         while ((Acceso != 'A' && Acceso != 'B' && Acceso != 'y')){
-            cout << "Opción no Valida. Intenta Nuevamente: ";
+            cout << "Opcion no Valida. Intenta Nuevamente: ";
             cin >> Acceso;
         }
         LimpiarTerminal();
-        if (Acceso == 'A'){
-            cout << "Ingresa la Clave Asignada para los Usuarios Administradores: ";
-            cin.ignore();
-            cin.getline(Auxiliar,30);
-            Traspass(Auxiliar, Clave);
-        } else if (Acceso == 'y'){
-            bandera = '0';
+        if (Acceso == 'y'){
+            bandera = true;
         } else{
-            cout << "Ingresa tu Numero de Documento: ";
-            cin.ignore();
-            cin.getline(Auxiliar,30);
-            Traspass(Auxiliar, Cedula);
-            cout << "Ingresa tu Clave: ";
-            cin.getline(Auxiliar,30);
-            Traspass(Auxiliar, Clave);
-        }
-        LimpiarTerminal();
-        bool Ingreso;
-
-        do{
-            Ingreso = IngresoSistem(sudo, Cedula, Clave, Acceso, posB);
-            cont++;
-            if (cont == 3){
-                cout << "Acceso Denegado al Sistema. Gracias por adquirir nuestros Servicios:)\n";
-                return 1;
+            if (Acceso == 'A'){
+                cout << "Ingresa la Clave Asignada para los Usuarios Administradores: ";
+                cin.ignore();
+                cin.getline(Auxiliar,30);
+                Traspass(Auxiliar, Clave, 6);
+            } else{
+                cout << "Ingresa tu Numero de Cedula: ";
+                cin.ignore();
+                cin.getline(Auxiliar,30);
+                Traspass(Auxiliar, Cedula, 10);
+                cout << "Ingresa tu Clave: ";
+                cin.getline(Auxiliar,30);
+                Traspass(Auxiliar, Clave, 6);
             }
-        } while (!Ingreso);
 
-        while (bandera != 'y'){
+            do{
+                Ingreso = IngresoSistem(Cedula, Clave, Saldo, Acceso, posB, lineas);
+                cont++;
+                if (!Ingreso){
+                    if (Acceso == 'A'){
+                        cout << "La Clave Ingresada es Incorrecta.\nIntenta Nuevamente: ";
+                        cin.getline(Auxiliar,30);
+                        Traspass(Auxiliar, Clave, 6);
+                    } else{
+                        cout << "Los Datos Ingresados no se pudieron encontrar en el Sistema.\nIntenta Nuevamente.\n";
+                        cout << "Ingresa tu Numero de Cedula: ";
+                        cin.getline(Auxiliar,30);
+                        Traspass(Auxiliar, Cedula, 10);
+                        cout << "Ingresa tu Clave: ";
+                        cin.getline(Auxiliar,30);
+                        Traspass(Auxiliar, Clave, 6);
+                        cout << Clave;
+                    }
+                    if (cont > 3){
+                        return 1;
+                    }
+                }
+            } while (!Ingreso);
+        }
+
+        LimpiarTerminal();
+        while (Ingreso){
             cont = 0;
             if (Acceso == 'B'){
-                long int newSaldo;
-                cout << "¿Que Accion deseas realizar?\n(A) - Consultar tu Saldo.\n(B) - Retirar Dinero.\nEleccion: ";
+                char newSaldo[25];
+                cout << "Que Accion deseas realizar?\n(A) - Consultar tu Saldo.\n(B) - Retirar Dinero.\nNOTA: Ten en cuenta que cada transaccion a efectuar conlleva un costo de 1000 COP.\nEleccion: ";
                 cin >> Accion;
                 while ((Accion != 'A' && Accion != 'B')){
                     cont++;
@@ -57,45 +74,46 @@ int main()
                         return 1;
                     }
                     cout << "Opción no Valida. Intenta Nuevamente: ";
-                    cin >> Acceso;
+                    cin >> Accion;
                 }
-                if (Accion == 'A'){
-                    newSaldo = 1000;
-                } else{
-                    cin >> newSaldo;
-                    newSaldo += 1000;
+                if (Accion == 'B'){
+                    cout << "Ingresa la Cantidad de Dinero que deseas Retirar: ";
+                    cin.ignore();
+                    cin.getline(Auxiliar, 30);
+                    Traspass(Auxiliar, newSaldo, 24);
                 }
-                Saldo = Descuento(Saldo, newSaldo, Accion);
+                Descuento(Saldo, atof(newSaldo), Accion);
             } else{
                 cout << "Ingresa en Orden los Siguientes Datos:\n1. Cedula.\n2. Clave\n3. Saldo (No Mayor a 9.999.999.998.999$)\n";
-
                 do{
                     cout << "Cedula: ";
-                    cin.ignore();
                     cin.getline(Auxiliar,30);
-                    Traspass(Auxiliar, Cedula);
+                    Traspass(Auxiliar, Cedula, 10);
                     cout << "Clave: ";
                     cin.getline(Auxiliar,30);
-                    Traspass(Auxiliar, Clave);
+                    Traspass(Auxiliar, Clave, 6);
                     cout << "Saldo: ";
                     cin.getline(Auxiliar,30);
-                    Traspass(Auxiliar, Saldo);
-                    Ingreso = VerifReg(Clave, Cedula, Saldo);
+                    Traspass(Auxiliar, Saldo, 24);
+                    Ingreso = VerifReg(Clave, Cedula);
                     if (!Ingreso){
-                        cout << "Has Ingresado Caracteres no Numericos. Vuelve a Intentarlo.\n";
+                        cout << "Has Ingresado Informacion no Valida. Vuelve a Intentarlo.\n";
                     }
                 } while (!Ingreso);
-
             }
-            Escribirnewdates(Clave, Cedula, Saldo, Acceso, posB);
+            Escribirnewdates(Clave, Cedula, Saldo, Acceso, posB, lineas);
             cout << "¿Deseas cerrar la sesion? (y/n)\nEleccion: ";
-            cin >> Acceso;
-            while ((Acceso != 'y' && Acceso != 'n')){
-                cout << "Opción no Valida. Intenta Nuevamente: ";
-                cin >> Acceso;
+            cin >> Accion;
+            while ((Accion != 'y' && Accion != 'n')){
+                cout << "Opcion no Valida. Intenta Nuevamente: ";
+                cin >> Accion;
+            }
+            if (Accion == 'y'){
+                Ingreso = false;
             }
             LimpiarTerminal();
         }
+        LimpiarTerminal();
     }
     return 0;
 }
